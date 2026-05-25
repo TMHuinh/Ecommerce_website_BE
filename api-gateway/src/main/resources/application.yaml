@@ -1,0 +1,57 @@
+server:
+  port: 8888
+
+app:
+  api-prefix: /api/v1
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: identity_service
+          uri: http://localhost:8080
+          predicates:
+            - Path=${app.api-prefix}/identity-service/**
+          filters:
+
+            -  StripPrefix=2
+        - id: product_service
+          uri: http://localhost:8081
+          predicates:
+            - Path=${app.api-prefix}/product-service/**
+          filters:
+            -  StripPrefix=2
+        - id: cart_service
+          uri: http://localhost:8082
+          predicates:
+            - Path=${app.api-prefix}/cart-service/**
+          filters:
+            - StripPrefix=2
+        - id: order_service
+          uri: http://localhost:8083
+          predicates:
+            - Path=${app.api-prefix}/order-service/**
+          filters:
+            - StripPrefix=2
+        - id: notification_service
+          uri: http://localhost:8084
+          predicates:
+            - Path=${app.api-prefix}/notification-service/**
+          filters:
+            - StripPrefix=2
+        - id: voucher_service
+          uri: http://localhost:8085
+          predicates:
+            - Path=${app.api-prefix}/voucher-service/**
+          filters:
+            - StripPrefix=2
+        - id: review_service
+          uri: http://localhost:8086
+          predicates:
+            - Path=${app.api-prefix}/review-service/**
+          filters:
+            - StripPrefix=2
