@@ -17,4 +17,5 @@ public class AddToCartRequest {
     int quantity;
     double productPrice;
     int inventoryQuantity;
+    int discountPercent;
 }

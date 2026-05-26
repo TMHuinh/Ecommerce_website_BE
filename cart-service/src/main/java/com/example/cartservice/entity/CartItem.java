@@ -18,4 +18,5 @@ public class CartItem {
     int quantity;
     double productPrice;
     int inventoryQuantity;
+    int discountPercent;
 }
