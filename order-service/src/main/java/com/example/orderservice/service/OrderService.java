@@ -46,11 +46,12 @@ public class OrderService {
     public ApiResponse<OrderResponse> saveOrder(OrderRequest orderRequest) throws JsonProcessingException {
         var order = orderMapper.toOrder(orderRequest);
         order.setStatus(OrderStatus.PROCESSING);
-        orderRepository.save(order);
+        var savedOrder = orderRepository.save(order);
+        log.info("Saved order {} for account {}", savedOrder.getId(), savedOrder.getAccountID());
 
         // Gửi sự kiện "order-created" lên Kafka
         List<InventoryCheckEvent> events = new ArrayList<>();
-        order.getOrderDetails().forEach(orderDetail ->
+        savedOrder.getOrderDetails().forEach(orderDetail ->
                 events.add(
                         InventoryCheckEvent.builder()
                                 .productID(orderDetail.getProductID())
@@ -61,11 +62,11 @@ public class OrderService {
                 )
         );
 
-        SellProductEvent event1 = new SellProductEvent(order.getId(),events);
+        SellProductEvent event1 = new SellProductEvent(savedOrder.getId(),events);
         orderProducer.sendCreateOrderToProduct(event1);
 
         return ApiResponse.<OrderResponse>builder()
-                .result(orderMapper.toOrderResponse(order))
+                .result(orderMapper.toOrderResponse(savedOrder))
                 .build();
     }
 

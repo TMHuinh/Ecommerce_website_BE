@@ -6,6 +6,8 @@ import com.example.dtocommon.kafka.Order_Product.SellProductEvent;
 import com.example.dtocommon.kafka.Order_Product.SellProductResultEvent;
 import com.example.dtocommon.kafka.Order_Voucher.UseVoucherEvent;
 import com.example.dtocommon.kafka.Order_Voucher.UseVoucherResultEvent;
+import com.example.orderservice.configuration.OrderWebSocketHandler;
+import com.example.orderservice.entity.Order;
 import com.example.orderservice.entity.OrderDetail;
 import com.example.orderservice.enums.OrderStatus;
 import com.example.orderservice.kafka.config.JsonConverter;
@@ -43,21 +45,10 @@ public class OrderConsumer {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         if (event.isResult()) {
-            order.setStatus(OrderStatus.ORDERED);
-            orderRepository.save(order);
-
-            //            send notification to font-end
-            messagingTemplate.convertAndSend("/topic/orders", "Order successfully processed");
-
-//            send event order successfully to cart
-            OrderSuccessfully orderSuccessfully = OrderSuccessfully.builder()
-                    .accountID(order.getAccountID())
-                    .listProductID(order.getOrderDetails().stream()
-                            .map(OrderDetail::getProductID).toList())
-                    .build();
-            orderProducer.sendOrderSuccessfullyToCart(orderSuccessfully);
+            completeOrder(order);
 
         } else {
+            log.warn("Voucher failed for order {}, rollback product and delete order", order.getId());
 //            rollback product
             List<InventoryCheckEvent> inventoryCheckEventList = new ArrayList<>();
             order.getOrderDetails().stream().forEach(
@@ -79,6 +70,7 @@ public class OrderConsumer {
 
             orderRepository.delete(order);
             messagingTemplate.convertAndSend("/topic/orders", "Order creation failed");
+            OrderWebSocketHandler.broadcast("Order creation failed");
         }
     }
 
@@ -89,13 +81,39 @@ public class OrderConsumer {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         if (event.isResult()) {
+            if (order.getVoucherID() == null || order.getVoucherID().isBlank()) {
+                completeOrder(order);
+                return;
+            }
+
             UseVoucherEvent useVoucherEvent = UseVoucherEvent.builder()
                     .orderID(order.getId())
                     .voucherID(order.getVoucherID())
                     .build();
             orderProducer.sendOrderSuccessToVoucher(useVoucherEvent);
         } else {
+            log.warn("Product failed for order {}, delete order. Reason: {}", order.getId(), event.getMessage());
             orderRepository.delete(order);
+            messagingTemplate.convertAndSend("/topic/orders", "Order creation failed");
+            OrderWebSocketHandler.broadcast("Order creation failed");
         }
+    }
+
+    private void completeOrder(Order order) {
+        order.setStatus(OrderStatus.ORDERED);
+        orderRepository.save(order);
+        log.info("Order {} completed successfully", order.getId());
+
+        //            send notification to font-end
+        messagingTemplate.convertAndSend("/topic/orders", "Order successfully processed");
+        OrderWebSocketHandler.broadcast("Order successfully processed");
+
+//            send event order successfully to cart
+        OrderSuccessfully orderSuccessfully = OrderSuccessfully.builder()
+                .accountID(order.getAccountID())
+                .listProductID(order.getOrderDetails().stream()
+                        .map(OrderDetail::getProductID).toList())
+                .build();
+        orderProducer.sendOrderSuccessfullyToCart(orderSuccessfully);
     }
 }

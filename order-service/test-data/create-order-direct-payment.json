@@ -1,0 +1,21 @@
+{
+  "dateCreated": "2026-05-27T15:30:00",
+  "payment": "DIRECT_PAYMENT",
+  "totalPrice": 270000,
+  "consigneeName": "Nguyen Van A",
+  "consigneeEmail": "nguyenvana@example.com",
+  "consigneePhone": "0901234567",
+  "address": "12 Nguyen Trai, Phuong Ben Thanh, Quan 1, TP Ho Chi Minh",
+  "accountID": "test-account-id",
+  "voucherID": "",
+  "orderDetails": [
+    {
+      "productID": "6a131ade05918bb199835eb1",
+      "productName": "Ao thun local brand",
+      "quantity": 1,
+      "color": "Den",
+      "size": "M",
+      "productPrice": 250000
+    }
+  ]
+}

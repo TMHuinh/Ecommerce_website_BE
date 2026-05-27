@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Document(collection = "Commune")
 public class Commune {
     String idDistrict;
     String idCommune;

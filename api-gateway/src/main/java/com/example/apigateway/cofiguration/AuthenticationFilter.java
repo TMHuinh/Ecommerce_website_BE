@@ -32,7 +32,24 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     IdentityService identityService;
     @Autowired
     ObjectMapper objectMapper;
-    final String[] publicEndPoint = {"/identity-service/auth/login", "/identity-service/account", "/identity-service/user", "/identity-service/user/.*", "/product-service/product", "/product-service/producttype", "/product-service/review", "/identity-service/auth/introspect","/product-service/page","/product-service/fbn/.*"};
+    final String[] publicEndPoint = {
+            "/identity-service/auth/login",
+            "/identity-service/auth/introspect",
+            "/identity-service/account",
+            "/identity-service/user",
+            "/identity-service/user/.*",
+            "/product-service/product",
+            "/product-service/product/.*",
+            "/product-service/product/page",
+            "/product-service/product/fbn/.*",
+            "/product-service/product-type",
+            "/product-service/producttype",
+            "/review-service/review",
+            "/review-service/review/.*",
+            "/order-service/address",
+            "/order-service/address/.*",
+            "/order-service/websocket/.*"
+    };
     @Value("${app.api-prefix}")
     String apiPrefix;
 
