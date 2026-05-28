@@ -42,17 +42,27 @@ public class ProductConsumer {
         List<InventoryCheckEvent> inventoryCheckEventList = events.getList();
         List<SellProductRequest> processRequests = new ArrayList<>();
         for (InventoryCheckEvent inventoryCheckEvent : inventoryCheckEventList) {
-            ApiResponse<?> response = productService.sellProduct(productMapper.toSellProductRequest(inventoryCheckEvent));
+            SellProductRequest request = productMapper.toSellProductRequest(inventoryCheckEvent);
+            ApiResponse<?> response = productService.sellProduct(request);
             if(response.getCode() != 1000){
                 event.setResult(false);
                 processRequests.stream().forEach(
                         sellProductRequest -> productService.rollbackSellProduct(sellProductRequest)
                 );
-                event.setMessage("Sell product fail");
+                String message = "Sell product fail for productID=%s, size=%s, color=%s, quantity=%s. Reason: %s"
+                        .formatted(
+                                inventoryCheckEvent.getProductID(),
+                                inventoryCheckEvent.getSize(),
+                                inventoryCheckEvent.getColor(),
+                                inventoryCheckEvent.getQuantity(),
+                                response.getResult()
+                        );
+                log.warn(message);
+                event.setMessage(message);
                 productProducer.sellProductResultEvent(event);
                 return;
             }else {
-                processRequests.add(productMapper.toSellProductRequest(inventoryCheckEvent));
+                processRequests.add(request);
             }
         }
 

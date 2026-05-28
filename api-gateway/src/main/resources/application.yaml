@@ -31,6 +31,12 @@ spring:
             - Path=${app.api-prefix}/cart-service/**
           filters:
             - StripPrefix=2
+        - id: order_service_websocket
+          uri: ws://localhost:8083
+          predicates:
+            - Path=${app.api-prefix}/order-service/websocket/**
+          filters:
+            - StripPrefix=2
         - id: order_service
           uri: http://localhost:8083
           predicates:

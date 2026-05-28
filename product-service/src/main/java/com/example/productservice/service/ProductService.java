@@ -14,8 +14,6 @@ import com.example.productservice.exception.AppException;
 import com.example.productservice.mapper.ProductMapper;
 import com.example.productservice.repository.ProductRepository;
 import com.example.productservice.repository.ProductTypeRepository;
-import com.mongodb.client.ClientSession;
-import com.mongodb.client.MongoClient;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -116,6 +114,13 @@ public class ProductService {
     }
 
     public ApiResponse<?> sellProduct(SellProductRequest request) {
+        if (request.getSize() == null) {
+            return ApiResponse.builder()
+                    .code(400)
+                    .result("Invalid size")
+                    .build();
+        }
+
         // Tìm sản phẩm theo ID
         Product product = productRepository.findById(request.getProductID()).orElse(null);
         if (product == null) {
@@ -159,6 +164,13 @@ public class ProductService {
     }
 
     public ApiResponse<?> rollbackSellProduct(SellProductRequest request) {
+        if (request.getSize() == null) {
+            return ApiResponse.builder()
+                    .code(400)
+                    .result("Invalid size")
+                    .build();
+        }
+
         // Tìm sản phẩm theo ID
         Product product = productRepository.findById(request.getProductID()).orElse(null);
         if (product == null) {
