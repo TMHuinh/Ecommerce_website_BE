@@ -16,6 +16,7 @@ public class UserCreateRequest {
     String typeOfUser;
     String phoneNumber;
     String email;
+    String firebaseId;
     String password;
     boolean gender;
 }

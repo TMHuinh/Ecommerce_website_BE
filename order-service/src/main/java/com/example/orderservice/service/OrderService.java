@@ -69,5 +69,14 @@ public class OrderService {
                 .result(orderMapper.toOrderResponse(savedOrder))
                 .build();
     }
+    public ApiResponse<List<OrderResponse>> findByAccountID(String accountID) {
+    var orders = orderRepository.findByAccountIDOrderByDateCreatedDesc(accountID);
+
+    return ApiResponse.<List<OrderResponse>>builder()
+            .result(orders.stream()
+                    .map(orderMapper::toOrderResponse)
+                    .toList())
+            .build();
+}
 
 }

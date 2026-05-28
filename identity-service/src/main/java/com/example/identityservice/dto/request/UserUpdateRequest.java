@@ -16,5 +16,6 @@ public class UserUpdateRequest {
     String typeOfUser;
     String phoneNumber;
     String email;
+    String firebaseId;
     boolean gender;
 }

@@ -20,5 +20,6 @@ public class User {
     TypeOfUser typeOfUser;
     String phoneNumber;
     String email;
+    String firebaseId;
     boolean gender;
 }

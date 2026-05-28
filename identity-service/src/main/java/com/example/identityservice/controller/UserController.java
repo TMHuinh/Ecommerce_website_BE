@@ -24,6 +24,21 @@ public class UserController {
                 .result(userService.getAllUsers())
                 .build();
     }
+
+    @GetMapping("/fbid/{firebaseId}")
+    public ApiResponse<UserResponse> getUserByFirebaseId(@PathVariable String firebaseId) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getUserByFirebaseId(firebaseId))
+                .build();
+    }
+
+    @GetMapping("/{userID}")
+    public ApiResponse<UserResponse> getUserById(@PathVariable String userID) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getUserById(userID))
+                .build();
+    }
+
     @PostMapping
     public ApiResponse<UserResponse> createUser(@RequestBody UserCreateRequest request){
         return ApiResponse.<UserResponse>builder()

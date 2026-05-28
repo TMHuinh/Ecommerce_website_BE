@@ -48,7 +48,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             "/review-service/review/.*",
             "/order-service/address",
             "/order-service/address/.*",
-            "/order-service/websocket/.*"
+            "/order-service/websocket/.*",
+            "/voucher-service/getAll",
+            "/voucher-service/valid-vouchers",
+            "/voucher-service/vouchers-freeship"
     };
     @Value("${app.api-prefix}")
     String apiPrefix;
@@ -60,6 +63,11 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         
         log.info("━━━ REQUEST: {} {} ━━━", method, path);
         
+        if ("OPTIONS".equalsIgnoreCase(method)) {
+            log.info("CORS preflight request - allowing access without token");
+            return chain.filter(exchange);
+        }
+
         List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
         
         if (ispublicEndPoint(exchange.getRequest())) {

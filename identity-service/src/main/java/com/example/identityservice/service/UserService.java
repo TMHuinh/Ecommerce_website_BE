@@ -8,6 +8,7 @@ import com.example.identityservice.entity.User;
 import com.example.identityservice.enums.ErrorCode;
 import com.example.identityservice.exception.AppException;
 import com.example.identityservice.mapper.UserMapper;
+import com.example.identityservice.repository.AccountRepository;
 import com.example.identityservice.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +30,24 @@ public class UserService {
     UserMapper userMapper;
     KafkaTemplate<String, String> kafkaTemplate;
     AccountService accountService;
+    AccountRepository accountRepository;
 
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER','STAFF')")
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
+    }
+
+    public UserResponse getUserByFirebaseId(String firebaseId) {
+        User user = userRepository.findByFirebaseId(firebaseId)
+                .or(() -> userRepository.findById(firebaseId))
+                .or(() -> accountRepository.findById(firebaseId).map(account -> account.getUser()))
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        return userMapper.toUserResponse(user);
+    }
+
+    public UserResponse getUserById(String userID) {
+        User user = userRepository.findById(userID).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        return userMapper.toUserResponse(user);
     }
 
     public UserResponse createUser(UserCreateRequest request) {
