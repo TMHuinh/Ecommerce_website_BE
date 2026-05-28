@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends MongoRepository<Order, String> {
     List<Order> findByDateCreatedBetween(LocalDateTime startDate, LocalDateTime endDate);
+     List<Order> findByAccountIDOrderByDateCreatedDesc(String accountID);
 }

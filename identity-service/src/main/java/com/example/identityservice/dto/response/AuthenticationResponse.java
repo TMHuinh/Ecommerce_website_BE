@@ -12,4 +12,5 @@ public class AuthenticationResponse {
     String token;
     boolean isValid;
     String id;
+    String customerId;
 }

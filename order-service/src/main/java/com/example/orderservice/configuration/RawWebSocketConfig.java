@@ -10,7 +10,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class RawWebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new OrderWebSocketHandler(), "/websocket/ws")
+        registry.addHandler(new OrderWebSocketHandler(), "/websocket/raw")
                 .setAllowedOrigins("http://localhost:3000");
     }
 }

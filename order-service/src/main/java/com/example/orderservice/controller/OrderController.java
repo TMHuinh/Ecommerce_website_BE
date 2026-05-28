@@ -29,4 +29,9 @@ public class OrderController {
     ApiResponse<List<OrderResponse>> getOrder(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return orderService.findByDateOrder(date);
     }
+
+    @GetMapping("/account/{accountID}")
+    ApiResponse<List<OrderResponse>> getOrderHistory(@PathVariable String accountID) {
+        return orderService.findByAccountID(accountID);
+    }
 }
