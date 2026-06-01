@@ -20,7 +20,7 @@ public class SecurityConfig {
     private CustomerJwtDecoder customerJwtDecoder;
     @Autowired
     private  CustomAccessDeniedHandler customAccessDeniedHandler;
-    private static final String[] END_POINTS = {"/product","/product-type","/product/page","/product/","/product/fbn/*"};
+    private static final String[] END_POINTS = {"/product","/product-type","/product/page","/product/","/product/fbn/*","/product/search","/product/search/*"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
