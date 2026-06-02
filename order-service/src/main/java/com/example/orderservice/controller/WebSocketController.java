@@ -14,4 +14,5 @@ public class WebSocketController {
     public String handleMessage(String message) {
         return message; // Trả về phản hồi
     }
+    // Test WebSocket bằng cách gửi tin nhắn từ client và nhận phản hồi tại /topic/orders
 }
