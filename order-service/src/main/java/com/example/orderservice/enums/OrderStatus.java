@@ -3,7 +3,11 @@ package com.example.orderservice.enums;
 public enum OrderStatus {
     ORDERED("Ordered"),
     CANCELED("Canceled"),
-    PROCESSING("Processing")
+    CANCELLED("Cancelled"),
+    PROCESSING("Processing"),
+    CONFIRMED("Confirmed"),
+    SHIPPING("Shipping"),
+    COMPLETED("Completed")
     ;
 
     OrderStatus(String name) {

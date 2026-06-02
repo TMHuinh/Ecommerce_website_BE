@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -23,6 +24,9 @@ public class ReviewService {
     ReviewMapper reviewMapper;
     public ReviewResponse createReview(ReviewCreateRequest request){
         Review review = reviewMapper.toReview(request);
+        if (review.getCreatedAt() == null) {
+            review.setCreatedAt(LocalDate.now());
+        }
         return reviewMapper.toReviewResponse(reviewRepository.save(review));
     }
     public List<ReviewResponse> getAllReviews(){

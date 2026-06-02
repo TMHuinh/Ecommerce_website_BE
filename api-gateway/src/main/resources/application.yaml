@@ -3,6 +3,10 @@ server:
 
 app:
   api-prefix: /api/v1
+  rate-limit:
+    enabled: true
+    max-requests: 1000
+    window-seconds: 60
 
 spring:
   main:
@@ -19,14 +23,13 @@ spring:
           predicates:
             - Path=${app.api-prefix}/identity-service/**
           filters:
-
-            -  StripPrefix=2
+            - StripPrefix=2
         - id: product_service
           uri: http://localhost:8081
           predicates:
             - Path=${app.api-prefix}/product-service/**
           filters:
-            -  StripPrefix=2
+            - StripPrefix=2
         - id: cart_service
           uri: http://localhost:8082
           predicates:

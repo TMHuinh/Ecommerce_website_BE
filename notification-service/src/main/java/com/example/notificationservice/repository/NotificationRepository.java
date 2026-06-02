@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends MongoRepository<Notification, String> {
     List<Notification> findAllByAccountID(String accountID);
+    List<Notification> findAllByAccountIDOrderByTimeStampDesc(String accountID);
 }

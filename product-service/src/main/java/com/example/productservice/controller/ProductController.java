@@ -10,6 +10,7 @@ import com.example.productservice.service.ProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class ProductController {
     ProductService productService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<ProductResponse> createProduct(@RequestBody ProductCreateRequest request) {
         return ApiResponse.<ProductResponse>builder()
                 .result(productService.createProduct(request))
@@ -52,6 +54,20 @@ public class ProductController {
                 .build();
     }
 
+    @GetMapping("/search/{keyword}")
+    public ApiResponse<List<ProductResponse>> searchProducts(@PathVariable String keyword) {
+        return ApiResponse.<List<ProductResponse>>builder()
+                .result(productService.searchProducts(keyword))
+                .build();
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<List<ProductResponse>> searchProductsByKeyword(@RequestParam String keyword) {
+        return ApiResponse.<List<ProductResponse>>builder()
+                .result(productService.searchProducts(keyword))
+                .build();
+    }
+
     @GetMapping("/{productID}")
     public ApiResponse<ProductResponse> getProduct(@PathVariable String productID) {
         return ApiResponse.<ProductResponse>builder()
@@ -60,6 +76,7 @@ public class ProductController {
     }
 
     @PutMapping("/{productID}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<ProductResponse> updateProduct(
             @PathVariable String productID,
             @RequestBody ProductUpdateRequest request
@@ -70,6 +87,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productID}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<?> deleteProduct(@PathVariable String productID) {
         productService.deleteProduct(productID);
         return ApiResponse.builder()

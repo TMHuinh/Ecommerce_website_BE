@@ -2,6 +2,7 @@ package com.example.identityservice.service;
 
 import com.example.identityservice.dto.request.AccountCreateRequest;
 import com.example.identityservice.dto.request.AccountUpdateRequest;
+import com.example.identityservice.dto.request.ChangePasswordRequest;
 import com.example.identityservice.dto.response.AccountResponse;
 import com.example.identityservice.entity.Account;
 import com.example.identityservice.entity.Role;
@@ -66,6 +67,24 @@ public class AccountService {
         );
         account.setRoles(roleSet);
         return accountMapper.toAccountResponse(accountRepository.save(account));
+    }
+
+    public void changePassword(ChangePasswordRequest request) {
+        Account account = accountRepository.findById(request.getAccountID())
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+
+        boolean isOldPasswordCorrect = passwordEncoder.matches(
+                request.getOldPassword(),
+                account.getPassword()
+        );
+
+        if (!isOldPasswordCorrect) {
+            throw new AppException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        account.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        accountRepository.save(account);
     }
     public void deleteAccount(String accountID) {
         accountRepository.deleteById(accountID);

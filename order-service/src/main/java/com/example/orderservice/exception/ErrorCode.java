@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCode {
 
     CAN_NOT_SEND_MAIL(1001, "Can not send mail", HttpStatus.BAD_REQUEST),
+    NOT_FOUND(1004, "Not found", HttpStatus.NOT_FOUND),
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
     ERROR_CREATE_ORDER(1002, "Error while create order", HttpStatus.INTERNAL_SERVER_ERROR),
 

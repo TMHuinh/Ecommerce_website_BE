@@ -3,9 +3,12 @@ package com.example.orderservice.service;
 import com.example.dtocommon.kafka.Order_Product.InventoryCheckEvent;
 import com.example.dtocommon.kafka.Order_Product.SellProductEvent;
 import com.example.orderservice.dto.request.OrderRequest;
+import com.example.orderservice.dto.request.OrderStatusUpdateRequest;
 import com.example.orderservice.dto.response.ApiResponse;
 import com.example.orderservice.dto.response.OrderResponse;
 import com.example.orderservice.enums.OrderStatus;
+import com.example.orderservice.exception.AppException;
+import com.example.orderservice.exception.ErrorCode;
 import com.example.orderservice.kafka.producer.OrderProducer;
 import com.example.orderservice.mapper.OrderMapper;
 import com.example.orderservice.repository.OrderRepository;
@@ -30,6 +33,16 @@ public class OrderService {
     OrderRepository orderRepository;
     OrderMapper orderMapper;
     OrderProducer orderProducer;
+
+    public ApiResponse<List<OrderResponse>> findAllOrders() {
+        var orders = orderRepository.findAllByOrderByDateCreatedDesc();
+
+        return ApiResponse.<List<OrderResponse>>builder()
+                .result(orders.stream()
+                        .map(orderMapper::toOrderResponse)
+                        .toList())
+                .build();
+    }
 
     public ApiResponse<List<OrderResponse>> findByDateOrder(LocalDate date){
         LocalDateTime startOfDay = date.atStartOfDay();
@@ -78,5 +91,19 @@ public class OrderService {
                     .toList())
             .build();
 }
+
+    public ApiResponse<OrderResponse> updateOrderStatus(String orderID, OrderStatusUpdateRequest request) {
+        if (request == null || request.getStatus() == null) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
+
+        var order = orderRepository.findById(orderID)
+                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        order.setStatus(request.getStatus());
+
+        return ApiResponse.<OrderResponse>builder()
+                .result(orderMapper.toOrderResponse(orderRepository.save(order)))
+                .build();
+    }
 
 }

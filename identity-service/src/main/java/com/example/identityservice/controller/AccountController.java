@@ -2,6 +2,7 @@ package com.example.identityservice.controller;
 
 import com.example.identityservice.dto.request.AccountCreateRequest;
 import com.example.identityservice.dto.request.AccountUpdateRequest;
+import com.example.identityservice.dto.request.ChangePasswordRequest;
 import com.example.identityservice.dto.response.AccountResponse;
 import com.example.identityservice.dto.response.ApiResponse;
 import com.example.identityservice.service.AccountService;
@@ -16,7 +17,7 @@ import java.util.List;
 @RequestMapping("/account")
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 @RequiredArgsConstructor
-public class AccountController {
+public class    AccountController {
     AccountService accountService;
     @PostMapping
     public ApiResponse<AccountResponse> createAccount(@RequestBody AccountCreateRequest request){
@@ -41,6 +42,14 @@ public class AccountController {
         accountService.deleteAccount(accountID);
         return ApiResponse.<Void>builder()
                 .message("Account with ID: "+accountID+" deleted")
+                .build();
+    }
+    @PutMapping("/change-password")
+    public ApiResponse<Void> changePassword(@RequestBody ChangePasswordRequest request) {
+        accountService.changePassword(request);
+
+        return ApiResponse.<Void>builder()
+                .message("Password changed successfully")
                 .build();
     }
 }

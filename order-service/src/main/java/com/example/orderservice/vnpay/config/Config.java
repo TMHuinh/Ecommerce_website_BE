@@ -21,10 +21,10 @@ import javax.crypto.spec.SecretKeySpec;
 public class Config {
 
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "https://32d9-115-78-5-154.ngrok-free.app/order-service/payment/payment-info";
-    public static String vnp_TmnCode = "Y830M0NY";
-    public static String vnp_HashSecret = "GORTOQT6K7NQZ0HZGBFU8V3XL6O63HQP";
-    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+    public static String vnp_ReturnUrl = "https://ectypal-hyperrationally-eneida.ngrok-free.dev/order-service/payment/payment-info";
+    public static String vnp_TmnCode = "GRBW6J0P";
+    public static String vnp_HashSecret = "LJD0H7QOJP4KPWZXF1E8J1OU8ZI07M53";
+//    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
 

@@ -90,6 +90,20 @@ public class ProductService {
         return productRepository.findAll().stream().map(productMapper::toProductResponse).toList();
     }
 
+    public List<ProductResponse> searchProducts(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getAllProducts();
+        }
+
+        String keywordSlug = createSlug(keyword);
+
+        return productRepository.findAll()
+                .stream()
+                .filter(product -> createSlug(product.getName()).contains(keywordSlug))
+                .map(productMapper::toProductResponse)
+                .toList();
+    }
+
     public ProductResponse updateProduct(String id, ProductUpdateRequest request) {
         Product product = productRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
         productMapper.updateProduct(request, product);

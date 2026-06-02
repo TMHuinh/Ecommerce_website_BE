@@ -29,6 +29,28 @@ public class NotificationController {
                 .result(notificationService.getAllNotifications())
                 .build();
     }
+
+    @GetMapping("/account/{accountID}")
+    public ApiResponse<List<NotificationResponse>> getNotificationsByAccountID(@PathVariable String accountID){
+        return ApiResponse.<List<NotificationResponse>>builder()
+                .result(notificationService.getNotificationsByAccountID(accountID))
+                .build();
+    }
+
+    @PutMapping("/{notificationID}/read")
+    public ApiResponse<NotificationResponse> markAsRead(@PathVariable String notificationID){
+        return ApiResponse.<NotificationResponse>builder()
+                .result(notificationService.markAsRead(notificationID))
+                .build();
+    }
+
+    @PutMapping("/account/{accountID}/read-all")
+    public ApiResponse<List<NotificationResponse>> markAllAsRead(@PathVariable String accountID){
+        return ApiResponse.<List<NotificationResponse>>builder()
+                .result(notificationService.markAllAsRead(accountID))
+                .build();
+    }
+
     @DeleteMapping("/remove-isread/{accountID}")
     public ApiResponse<?> removeIsRead(@PathVariable String accountID){
         notificationService.deleteNotificationIsReadByAccountID(accountID);

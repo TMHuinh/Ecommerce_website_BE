@@ -9,6 +9,7 @@ import com.example.productservice.service.ProductTypeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class ProductTypeController {
                 .build();
     }
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<ProductTypeResponse> createProductType(@RequestBody ProductTypeCreateRequest request){
         return ApiResponse.<ProductTypeResponse>builder()
                 .result(productTypeService.createProductType(request))
@@ -38,12 +40,14 @@ public class ProductTypeController {
                 .build();
     }
     @PutMapping("/{productTypeID}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<ProductTypeResponse> updateProductType(@PathVariable String productTypeID, @RequestBody ProductTypeUpdateRequest request){
         return ApiResponse.<ProductTypeResponse>builder()
                 .result(productTypeService.updateProductType(productTypeID, request))
                 .build();
     }
     @DeleteMapping("/{productTypeID}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<?> deleteProductType(@PathVariable String productTypeID){
         productTypeService.deleteProductType(productTypeID);
         return ApiResponse.builder()

@@ -9,6 +9,7 @@ import com.example.voucherservice.service.VoucherService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,11 +36,13 @@ public class VoucherController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<VoucherResponse> createVoucher(@RequestBody VoucherRequest voucherRequest){
         return voucherService.createVoucher(voucherRequest);
     }
 
     @PutMapping("/{voucherID}")
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<VoucherResponse> updateVoucher(@PathVariable String voucherID, @RequestBody UpdateVoucherRequest voucherRequest){
         return voucherService.updateVoucher(voucherID, voucherRequest);
     }
@@ -50,11 +53,13 @@ public class VoucherController {
     }
 
     @PutMapping("/update-quantity/{voucherID}")
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<VoucherResponse> updateVoucher(@PathVariable String voucherID, @RequestBody UpdateVoucherQuantityRequest request){
         return voucherService.updateVoucherQuantity(voucherID, request);
     }
 
     @DeleteMapping("/{voucherId}")
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<?> delete(@PathVariable String voucherId){
         return voucherService.deleteVoucher(voucherId);
     }
