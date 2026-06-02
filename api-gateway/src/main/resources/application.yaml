@@ -3,7 +3,10 @@ server:
 
 app:
   api-prefix: /api/v1
-
+  rate-limit:
+    enabled: true
+    max-requests: 1000
+    window-seconds: 60
 spring:
   main:
     web-application-type: reactive
