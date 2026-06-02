@@ -1,0 +1,25 @@
+{
+  "app": {
+    "name": "E-commerceWebsite",
+    "version": "1.0.0"
+  },
+  "server": {
+    "port": 8080,
+    "environment": "development"
+  },
+  "database": {
+    "host": "localhost",
+    "port": 3306,
+    "username": "root",
+    "password": "123456",
+    "dbName": "ecommerce_db"
+  },
+  "jwt": {
+    "secret": "your-secret-key",
+    "expiresIn": "1d"
+  },
+  "rateLimit": {
+    "windowMs": 60000,
+    "maxRequests": 100
+  }
+}
